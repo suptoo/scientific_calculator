@@ -3,50 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scientific Calculator</title>
+    <title>Advanced Scientific & Engineering Calculator</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
 </head>
-
 <body>
     <div class="calculator">
-        <input type="text" id="display" readonly>
-        <div class="buttons">
-            <!-- Row 1 -->
-            <button onclick="clearDisplay()">C</button>
-            <button onclick="deleteLast()">⌫</button>
-            <button onclick="append('(')">(</button>
-            <button onclick="append(')')">)</button>
-            <!-- Row 2 -->
-            <button onclick="append('7')">7</button>
-            <button onclick="append('8')">8</button>
-            <button onclick="append('9')">9</button>
-            <button onclick="append('/')">÷</button>
-            <!-- Row 3 -->
-            <button onclick="append('4')">4</button>
-            <button onclick="append('5')">5</button>
-            <button onclick="append('6')">6</button>
-            <button onclick="append('*')">×</button>
-            <!-- Row 4 -->
-            <button onclick="append('1')">1</button>
-            <button onclick="append('2')">2</button>
-            <button onclick="append('3')">3</button>
-            <button onclick="append('-')">−</button>
-            <!-- Row 5 -->
-            <button onclick="append('0')">0</button>
-            <button onclick="append('.')">.</button>
-            <button onclick="calculate()">=</button>
-            <button onclick="append('+')">+</button>
-            <!-- Row 6: Scientific -->
-            <button onclick="append('Math.sin(')">sin</button>
-            <button onclick="append('Math.cos(')">cos</button>
-            <button onclick="append('Math.tan(')">tan</button>
-            <button onclick="append('Math.log10(')">log</button>
-            <!-- Row 7: More Scientific -->
-            <button onclick="append('Math.sqrt(')">√</button>
-            <button onclick="append('Math.pow(')">xʸ</button>
-            <button onclick="append('Math.exp(')">exp</button>
-            <button onclick="append('Math.abs(')">abs</button>
+        <!-- Display Section -->
+        <div class="display-container">
+            <div class="secondary-display" id="history"></div>
+            <input type="text" id="display" readonly placeholder="0">
+            <div class="status-bar">
+                <span id="memory-indicator">M: 0</span>
+                <span id="angle-mode">DEG</span>
+                <span id="base-mode">DEC</span>
+            </div>
+        </div>
+        
+        <!-- Mode Selector -->
+        <div class="mode-selector">
+            <button class="mode-btn active" onclick="setMode('basic')">Basic</button>
+            <button class="mode-btn" onclick="setMode('advanced')">Advanced</button>
+            <button class="mode-btn" onclick="setMode('programming')">Programming</button>
+            <button class="mode-btn" onclick="setMode('statistics')">Statistics</button>
+        </div>
+
+        <!-- Basic Calculator Panel -->
+        <div class="button-panel" id="basic-panel">
+            <div class="buttons">
+                <!-- Memory Functions -->
+                <button class="memory-btn" onclick="memoryClear()">MC</button>
+                <button class="memory-btn" onclick="memoryRecall()">MR</button>
+                <button class="memory-btn" onclick="memoryStore()">MS</button>
+                <button class="memory-btn" onclick="memoryAdd()">M+</button>
+                <button class="memory-btn" onclick="memorySubtract()">M-</button>
+
+                <!-- Clear Functions -->
+                <button class="clear-btn" onclick="clearAll()">AC</button>
+                <button class="clear-btn" onclick="clearEntry()">CE</button>
+                <button class="operator-btn" onclick="deleteLast()">⌫</button>
+                <button class="operator-btn" onclick="toggleSign()">±</button>
+                <button class="operator-btn" onclick="percentage()">%</button>
+
+                <!-- Advanced Math Functions -->
+                <button class="function-btn" onclick="append('Math.sqrt(')">√</button>
+                <button class="function-btn" onclick="squareFunction()">x²</button> 
+                <button class="function-btn" onclick="powerFunction()">xʸ</button>
+                <button class="function-btn" onclick="reciprocal()">1/x</button>
+                <button class="operator-btn" onclick="append('/')">÷</button>
+
+                <!-- Numbers Row 1 -->
+                <button class="number-btn" onclick="append('7')">7</button>
+                <button class="number-btn" onclick="append('8')">8</button>
+                <button class="number-btn" onclick="append('9')">9</button>
+                <button class="operator-btn" onclick="append('*')">×</button>
+                <button class="function-btn" onclick="factorial()">n!</button>
+
+                <!-- Numbers Row 2 -->
+                <button class="number-btn" onclick="append('4')">4</button>
+                <button class="number-btn" onclick="append('5')">5</button>
+                <button class="number-btn" onclick="append('6')">6</button>
+                <button class="operator-btn" onclick="append('-')">−</button>
+                <button class="function-btn" onclick="append('Math.log10(')">log</button>
+
+                <!-- Numbers Row 3 -->
+                <button class="number-btn" onclick="append('1')">1</button>
+                <button class="number-btn" onclick="append('2')">2</button>
+                <button class="number-btn" onclick="append('3')">3</button>
+                <button class="operator-btn" onclick="append('+')">+</button>
+                <button class="function-btn" onclick="append('Math.log(')">ln</button>
+
+                <!-- Bottom Row -->
+                <button class="number-btn zero" onclick="append('0')">0</button>
+                <button class="number-btn" onclick="append('.')">.</button>
+                <button class="function-btn" onclick="append('Math.PI')">π</button>
+                <button class="equals-btn" onclick="calculate()">=</button>
+            </div>
+        </div>
+
+        <!-- Advanced Calculator Panel -->
+        <div class="button-panel hidden" id="advanced-panel">
+            <div class="buttons advanced-grid">
+                <!-- Mode Toggles -->
+                <button class="mode-toggle" onclick="toggleHyp()">Hyp</button>
+                <button class="mode-toggle" onclick="toggleInverse()">Inv</button>
+                <button class="angle-btn" onclick="toggleAngleMode()">DEG</button>
+                <button class="function-btn" onclick="append('Math.E')">e</button>
+                <button class="function-btn" onclick="append('Math.PI')">π</button>
+
+                <!-- Trigonometric Functions -->
+                <button class="trig-btn" onclick="trigFunction('sin')">sin</button>
+                <button class="trig-btn" onclick="trigFunction('cos')">cos</button>
+                <button class="trig-btn" onclick="trigFunction('tan')">tan</button>
+                <button class="function-btn" onclick="append('Math.log(')">ln</button>
+                <button class="function-btn" onclick="append('Math.log10(')">log</button>
+
+                <!-- Advanced Math -->
+                <button class="function-btn" onclick="append('Math.exp(')">eˣ</button>
+                <button class="function-btn" onclick="power10()">10ˣ</button>
+                <button class="function-btn" onclick="nthRoot()">ⁿ√x</button>
+                <button class="function-btn" onclick="append('Math.abs(')">|x|</button>
+                <button class="function-btn" onclick="append('Math.ceil(')">⌈x⌉</button>
+
+                <!-- Special Functions -->
+                <button class="function-btn" onclick="append('Math.floor(')">⌊x⌋</button>
+                <button class="function-btn" onclick="gammaFunction()">Γ(x)</button>
+                <button class="function-btn" onclick="combination()">nCr</button>
+                <button class="function-btn" onclick="permutation()">nPr</button>
+                <button class="function-btn" onclick="append('Math.random()')">Rand</button>
+
+                <!-- Extra Functions -->
+                <button class="function-btn" onclick="modOperation()">mod</button>
+                <button class="function-btn" onclick="gcdFunction()">gcd</button>
+                <button class="function-btn" onclick="lcmFunction()">lcm</button>
+                <button class="function-btn" onclick="primeCheck()">Prime?</button>
+                <button class="equals-btn" onclick="calculate()">=</button>
+            </div>
+        </div>
+
+        <!-- Programming Calculator Panel -->
+        <div class="button-panel hidden" id="programming-panel">
+            <div class="base-selector">
+                <button class="base-btn active" onclick="setBase('dec')">DEC</button>
+                <button class="base-btn" onclick="setBase('hex')">HEX</button>
+                <button class="base-btn" onclick="setBase('oct')">OCT</button>
+                <button class="base-btn" onclick="setBase('bin')">BIN</button>
+            </div>
+            <div class="buttons programming-grid">
+                <!-- Hex Digits -->
+                <button class="hex-btn" onclick="appendHex('A')">A</button>
+                <button class="hex-btn" onclick="appendHex('B')">B</button>
+                <button class="hex-btn" onclick="appendHex('C')">C</button>
+                <button class="hex-btn" onclick="appendHex('D')">D</button>
+                <button class="hex-btn" onclick="appendHex('E')">E</button>
+                <button class="hex-btn" onclick="appendHex('F')">F</button>
+
+                <!-- Bitwise Operations -->
+                <button class="bitwise-btn" onclick="append('&')">AND</button>
+                <button class="bitwise-btn" onclick="append('|')">OR</button>
+                <button class="bitwise-btn" onclick="append('^')">XOR</button>
+                <button class="bitwise-btn" onclick="bitwiseNot()">NOT</button>
+                <button class="bitwise-btn" onclick="append('<<')">LSH</button>
+                <button class="bitwise-btn" onclick="append('>>')">RSH</button>
+
+                <!-- Numbers -->
+                <button class="number-btn" onclick="append('7')">7</button>
+                <button class="number-btn" onclick="append('8')">8</button>
+                <button class="number-btn" onclick="append('9')">9</button>
+                <button class="number-btn" onclick="append('4')">4</button>
+                <button class="number-btn" onclick="append('5')">5</button>
+                <button class="number-btn" onclick="append('6')">6</button>
+                <button class="number-btn" onclick="append('1')">1</button>
+                <button class="number-btn" onclick="append('2')">2</button>
+                <button class="number-btn" onclick="append('3')">3</button>
+                <button class="number-btn zero" onclick="append('0')">0</button>
+                <button class="clear-btn" onclick="clearAll()">AC</button>
+                <button class="equals-btn" onclick="calculate()">=</button>
+            </div>
+        </div>
+
+        <!-- Statistics Calculator Panel -->
+        <div class="button-panel hidden" id="statistics-panel">
+            <div class="stats-display">
+                <div>Data: <span id="data-list">[]</span></div>
+                <div>Count: <span id="data-count">0</span></div>
+            </div>
+            <div class="buttons stats-grid">
+                <!-- Data Entry -->
+                <button class="stats-btn" onclick="addToDataSet()">Add Data</button>
+                <button class="stats-btn" onclick="clearDataSet()">Clear Data</button>
+                <button class="stats-btn" onclick="removeLastData()">Remove Last</button>
+
+                <!-- Basic Statistics -->
+                <button class="stats-btn" onclick="calculateMean()">Mean</button>
+                <button class="stats-btn" onclick="calculateMedian()">Median</button>
+                <button class="stats-btn" onclick="calculateMode()">Mode</button>
+                <button class="stats-btn" onclick="calculateStdDev()">Std Dev</button>
+                <button class="stats-btn" onclick="calculateVariance()">Variance</button>
+                <button class="stats-btn" onclick="calculateSum()">Sum</button>
+
+                <!-- Advanced Statistics -->
+                <button class="stats-btn" onclick="calculateRange()">Range</button>
+                <button class="stats-btn" onclick="calculateQ1()">Q1</button>
+                <button class="stats-btn" onclick="calculateQ3()">Q3</button>
+                <button class="stats-btn" onclick="calculateIQR()">IQR</button>
+                <button class="stats-btn" onclick="calculateSkewness()">Skewness</button>
+                <button class="stats-btn" onclick="calculateKurtosis()">Kurtosis</button>
+
+                <!-- Numbers for data entry -->
+                <button class="number-btn" onclick="append('7')">7</button>
+                <button class="number-btn" onclick="append('8')">8</button>
+                <button class="number-btn" onclick="append('9')">9</button>
+                <button class="number-btn" onclick="append('4')">4</button>
+                <button class="number-btn" onclick="append('5')">5</button>
+                <button class="number-btn" onclick="append('6')">6</button>
+                <button class="number-btn" onclick="append('1')">1</button>
+                <button class="number-btn" onclick="append('2')">2</button>
+                <button class="number-btn" onclick="append('3')">3</button>
+                <button class="number-btn zero" onclick="append('0')">0</button>
+                <button class="number-btn" onclick="append('.')">.</button>
+                <button class="equals-btn" onclick="calculate()">=</button>
+            </div>
+        </div>
+
+        <!-- History Panel -->
+        <div class="history-panel">
+            <div class="history-header">
+                <h3>History</h3>
+                <button onclick="clearHistory()">Clear</button>
+            </div>
+            <div class="history-list" id="history-list"></div>
         </div>
     </div>
     <script src="script.js"></script>
